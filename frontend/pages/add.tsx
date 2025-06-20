@@ -1,55 +1,56 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { createTask } from '../utils/api';
+import { Task } from '../types/Task';
 
 export default function AddTask() {
-  const [form, setForm] = useState({ title: '', description: '', status: '', dueDate: '' });
   const router = useRouter();
+  const [form, setForm] = useState<Partial<Task>>({
+    title: '',
+    description: '',
+    status: 'todo',
+    dueDate: '',
+  });
 
-  const handleChange = (e: any) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.title || !form.status) {
-      alert('Title and Status are required');
-      return;
-    }
+    if (!form.title) return;
     await createTask(form);
     router.push('/');
   };
 
   return (
-    <div className="container">
-      <h1>Add Task</h1>
+    <div className="form-container">
+      <h1>Add New Task</h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Title</label>
-          <input type="text" name="title" value={form.title} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label>Description</label>
-          <textarea name="description" value={form.description} onChange={handleChange} />
-        </div>
-        <div className="form-group">
-          <label>Status</label>
-          <select name="status" value={form.status} onChange={handleChange} required>
-            <option value="">Select status</option>
-            <option value="todo">To Do</option>
-            <option value="in_progress">In Progress</option>
-            <option value="done">Done</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label>Due Date</label>
-          <input type="date" name="dueDate" value={form.dueDate} onChange={handleChange} />
-        </div>
-        <button type="submit">Create Task</button>
+        <input
+          placeholder="Title"
+          value={form.title}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+          required
+        />
+        <textarea
+          placeholder="Description"
+          value={form.description}
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
+        />
+        <select
+          value={form.status}
+          onChange={(e) =>
+            setForm({ ...form, status: e.target.value as Task['status'] })
+          }
+        >
+          <option value="todo">Todo</option>
+          <option value="in_progress">In Progress</option>
+          <option value="done">Done</option>
+        </select>
+        <input
+          type="date"
+          value={form.dueDate}
+          onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
+        />
+        <button type="submit">Add Task</button>
       </form>
-      <div className="back-link">
-        <a href="/">← Back to Home</a>
-      </div>
     </div>
   );
 }
