@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { fetchTasks, deleteTask } from '../utils/api';
+import { getTasks, deleteTask } from '../utils/api';
 import { Task } from '../types/Task';
 
 export default function Home() {
