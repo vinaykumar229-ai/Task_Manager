@@ -14,18 +14,19 @@ const EditTask = () => {
     dueDate: '',
   });
 
-  useEffect(() => {
-    if (typeof id === 'string') {
-      getTaskById(id).then((task: Task) => {
-        setForm({
-          title: task.title,
-          description: task.description,
-          status: task.status,
-          dueDate: task.dueDate?.slice(0, 10) || '', // Format YYYY-MM-DD
-        });
+ useEffect(() => {
+  if (id && typeof id === 'string') {
+    getTaskById(id).then((task) => {
+      setForm({
+        title: task.title || '',
+        description: task.description || '',
+        status: task.status || 'todo',
+        dueDate: task.dueDate?.slice(0, 10) || '',
       });
-    }
-  }, [id]);
+    });
+  }
+}, [id]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
