@@ -10,7 +10,7 @@ export default function Home() {
   const router = useRouter();
 
   const load = async () => {
-    const data = await fetchTasks();
+    const data = await getTasks();
     setTasks(data);
     setFilteredTasks(data);
   };
